@@ -10,7 +10,7 @@ concurrency:
 jobs:
   activate:
     name: Verificar instaladores y activar versión
-    if: github.repository == 'Benya26/PULSO-Releases'
+    if: github.repository == 'Benya26/PULSO-Releases' && !github.event.release.prerelease && !github.event.release.draft
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
