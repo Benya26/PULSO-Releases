@@ -15,9 +15,8 @@ const pick=(predicate,description)=>{
 };
 const exe=pick(n=>n.endsWith('-setup.exe'),'.exe de Windows');
 const sigName=pick(n=>n===exe+'.sig','archivo .exe.sig de Windows');
-const arm=pick(n=>n.endsWith('.apk')&&/armv7|armeabi/i.test(n),'APK ARMv7');
-const arm64=pick(n=>n.endsWith('.apk')&&/aarch64|arm64/i.test(n),'APK ARM64');
-for(const n of [exe,sigName,arm,arm64]){
+const universal=pick(n=>n.endsWith('.apk')&&/universal/i.test(n),'APK universal ARMv7/ARM64');
+for(const n of [exe,sigName,universal]){
  const size=(await stat(join(folder,n))).size;
  if(size<(n.endsWith('.sig')?50:100_000))throw Error('Archivo incompleto: '+n);
 }
@@ -39,9 +38,9 @@ const android={
  package:'cl.maniatic.pulso',
  notes:'Nueva versión de PULSO disponible.',
  apks:{
-  arm:{url:url(arm),sha256:await sha256(join(folder,arm))},
-  aarch64:{url:url(arm64),sha256:await sha256(join(folder,arm64))}
+  universal:{url:url(universal),sha256:await sha256(join(folder,universal))}
  }
+
 };
 try{
  const before=JSON.parse(await readFile('latest.json','utf8')).version;
