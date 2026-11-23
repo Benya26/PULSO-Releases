@@ -14,11 +14,10 @@ const pick=(predicate,description)=>{
  return found[0];
 };
 const exe=pick(n=>n.endsWith('-setup.exe'),'.exe de Windows');
-const nsis=pick(n=>n.endsWith('.nsis.zip'),'.nsis.zip de Windows');
-const sigName=pick(n=>n===nsis+'.sig','archivo .sig de NSIS');
+const sigName=pick(n=>n===exe+'.sig','archivo .exe.sig de Windows');
 const arm=pick(n=>n.endsWith('.apk')&&/armv7|armeabi/i.test(n),'APK ARMv7');
 const arm64=pick(n=>n.endsWith('.apk')&&/aarch64|arm64/i.test(n),'APK ARM64');
-for(const n of [exe,nsis,sigName,arm,arm64]){
+for(const n of [exe,sigName,arm,arm64]){
  const size=(await stat(join(folder,n))).size;
  if(size<(n.endsWith('.sig')?50:100_000))throw Error('Archivo incompleto: '+n);
 }
@@ -33,7 +32,7 @@ const url=name=>base+encodeURIComponent(basename(name));
 const latest={
  version,
  notes:'Nueva versión de PULSO disponible.',
- platforms:{'windows-x86_64':{url:url(nsis),signature:sig}}
+ platforms:{'windows-x86_64':{url:url(exe),signature:sig}}
 };
 const android={
  version,
